@@ -11,7 +11,7 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: 'AI-Powered YouTube Video Summarization',
+  title: 'YT Summariser',
   description:
     'Save time and effort with AI-Powered YouTube Video Summarization',
 };
@@ -23,10 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${fontSans.variable} antialiased`}>
-        <div className="relative flex flex-col min-h-screen">
+      <body className={`${fontSans.variable} font-sans antialiased`}>
+        <div className="relative flex min-h-screen flex-col">
           <Header />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1"> {children}</main>
           <Footer />
         </div>
       </body>

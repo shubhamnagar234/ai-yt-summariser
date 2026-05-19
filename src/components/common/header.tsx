@@ -10,7 +10,7 @@ export default function Header() {
         <NavLink href="/" className="flex items-center gap-1 lg:gap shrink-0">
           <SquarePlay className="w-5 h-5 lg:w-8 lg:h-8 text-gray-900 hover:rotate-12 transform transition duration-200 ease-in-out" />
           <span className="font-extrabold lg:text-xl text-gray-900">
-            AI YT Summariser
+            YT Summariser
           </span>
         </NavLink>
       </div>
