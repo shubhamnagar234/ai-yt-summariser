@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Source_Sans_3 as FontSans } from 'next/font/google';
 import './globals.css';
+import Header from '@/components/common/header';
+import Footer from '@/components/common/footer';
 
 const fontSans = FontSans({
   variable: '--font-sans',
@@ -9,7 +11,7 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: 'AI-Powered YouTube Video Summarization',
+  title: 'YT Summariser',
   description:
     'Save time and effort with AI-Powered YouTube Video Summarization',
 };
@@ -20,8 +22,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fontSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en">
+      <body className={`${fontSans.variable} font-sans antialiased`}>
+        <div className="relative flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1"> {children}</main>
+          <Footer />
+        </div>
+      </body>
     </html>
   );
 }
