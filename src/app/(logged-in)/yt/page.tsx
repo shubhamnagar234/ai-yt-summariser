@@ -1,5 +1,6 @@
 import BgGradient from '@/components/common/bg-gradient';
 import YtHeader from '@/components/yt/yt-header';
+import UrlForm from '@/components/yt/url-form';
 
 export default function Page() {
   return (
@@ -19,6 +20,7 @@ export default function Page() {
           }}
         >
           <YtHeader />
+          <UrlForm />
         </div>
       </div>
     </section>
