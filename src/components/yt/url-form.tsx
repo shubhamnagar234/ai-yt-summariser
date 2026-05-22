@@ -33,8 +33,7 @@ export default function UrlForm() {
       if (!validatedFields.success) {
         toast.error('Invalid link', {
           description:
-            validatedFields.error.flatten().fieldErrors.url?.[0] ??
-            'Please check your URL',
+            validatedFields.error.issues?.[0]?.message ?? 'Invalid file',
         });
         setIsLoading(false);
         return;
