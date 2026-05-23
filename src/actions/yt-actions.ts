@@ -1,11 +1,11 @@
 'use server';
 
+import { getDBConnection } from '@/lib/db';
 import { generateSummaryFromGemini } from '@/lib/geminiai';
 import { fetchYoutubeMetadata } from '@/lib/youtube';
 import { generateSummaryFromOpenAI } from '@/lib/openai';
 import { auth } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
-
 interface YtSummaryType {
   url: string;
   summary: string;
@@ -25,25 +25,15 @@ export async function generateYTSummary(youtubeUrl: string) {
   try {
     const { transcript, title, videoId } =
       await fetchYoutubeMetadata(youtubeUrl);
-    console.log(`Fetched transcript for: ${title}`);
 
     let summary;
     try {
       summary = await generateSummaryFromOpenAI(transcript);
-      console.log('Summary generated via OpenAI');
     } catch (error) {
-      console.log('OpenAI Error:', error);
-
-      // Fallback to Gemini if OpenAI rate limit is hit
       if (error instanceof Error && error.message === 'RATE_LIMIT_EXCEEDED') {
         try {
           summary = await generateSummaryFromGemini(transcript);
-          console.log('Summary generated via Gemini');
         } catch (geminiError) {
-          console.error(
-            'Gemini API failed after OPENAI quota exceeded',
-            geminiError,
-          );
           throw new Error(
             'Failed to generate summary with available AI providers',
           );
@@ -79,14 +69,44 @@ export async function generateYTSummary(youtubeUrl: string) {
   }
 }
 
+async function saveYtSummary({
+  userId,
+  url,
+  summary,
+  title,
+  videoId,
+}: YtSummaryType & { userId: string }) {
+  try {
+    const sql = await getDBConnection();
+    const [savedSummary] = await sql`
+      INSERT INTO video_summaries(
+        user_id,
+        video_url,
+        video_id,
+        summary_text,
+        title
+      ) VALUES (
+        ${userId},
+        ${url},
+        ${videoId},
+        ${summary},
+        ${title}
+      ) RETURNING id, summary_text
+    `;
+    return savedSummary;
+  } catch (error) {
+    console.error('Error saving video summary', error);
+    throw error;
+  }
+}
+
 export async function storeYtSummaryAction({
   url,
   summary,
   title,
   videoId,
 }: YtSummaryType) {
-  let savedSummary: any = { id: 'mock-id-123' }; // Placeholder until DB logic is added
-
+  let savedSummary: any;
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -96,7 +116,20 @@ export async function storeYtSummaryAction({
       };
     }
 
-    // FUTURE: Database insertion logic goes here
+    savedSummary = await saveYtSummary({
+      userId,
+      url,
+      summary,
+      title,
+      videoId,
+    });
+
+    if (!savedSummary) {
+      return {
+        success: false,
+        message: 'Failed to save video summary, please try again...',
+      };
+    }
   } catch (error) {
     return {
       success: false,
@@ -105,7 +138,7 @@ export async function storeYtSummaryAction({
     };
   }
 
-  // Revalidation for cache
+  // Revalidate cache to ensure dashboard updates immediately
   revalidatePath(`/summaries/${savedSummary.id}`);
 
   return {
