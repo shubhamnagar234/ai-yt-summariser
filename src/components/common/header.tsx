@@ -1,34 +1,90 @@
 import { SquarePlay } from 'lucide-react';
-import { Button } from '../ui/button';
-import NavLink from './nav-link';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { SignInButton, Show, UserButton } from '@clerk/nextjs';
 
 export default function Header() {
-  const isLoggedIn = false;
   return (
-    <nav className="container flex items-center justify-between py-4 lg:px-8 px-2 mx-auto">
-      <div className="flex lg:flex-1">
-        <NavLink href="/" className="flex items-center gap-1 lg:gap shrink-0">
-          <SquarePlay className="w-5 h-5 lg:w-8 lg:h-8 text-gray-900 hover:rotate-12 transform transition duration-200 ease-in-out" />
-          <span className="font-extrabold lg:text-xl text-gray-900">
-            YT Summariser
-          </span>
-        </NavLink>
-      </div>
-      <div className="flex lg:justify-center gap-4 lg:gap-12 lg:items-center">
-        <NavLink href="/#pricing">Pricing</NavLink>
-        {isLoggedIn && <NavLink href="/#dashboard">Your Summaries</NavLink>}
-      </div>
-      <div className="flex lg:justify-end lg:flex-1">
-        {isLoggedIn ? (
-          <div className="flex gap-2 items-center">
-            <NavLink href="/upload">Upload a PDF</NavLink>
-            <div>Pro</div>
-            <Button>User</Button>
-          </div>
-        ) : (
-          <NavLink href="/sign-in">Sign In</NavLink>
-        )}
-      </div>
-    </nav>
+    <header
+      style={{
+        width: '100%',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        zIndex: 50,
+      }}
+    >
+      <nav
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '1.5rem 2rem',
+          margin: '0 auto',
+          maxWidth: '1200px',
+          boxSizing: 'border-box',
+          width: '100%',
+        }}
+      >
+        {/* Left: Logo Section */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Link
+            href="/"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              textDecoration: 'none',
+            }}
+          >
+            <SquarePlay
+              style={{ width: '2rem', height: '2rem', color: '#111827' }}
+            />
+            <span
+              style={{
+                fontWeight: 800,
+                fontSize: '1.25rem',
+                color: '#111827',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              YT Summariser
+            </span>
+          </Link>
+        </div>
+
+        {/* Right: Navigation & Auth Section */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          <Show when="signed-in">
+            <Link
+              href="/dashboard"
+              style={{
+                textDecoration: 'none',
+                color: '#374151',
+                fontWeight: 500,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Your Summaries
+            </Link>
+          </Show>
+
+          <Show when="signed-out">
+            <SignInButton mode="modal">
+              <Button
+                variant={'link'}
+                className="text-white rounded-full px-5 py-5 bg-linear-to-r from-slate-900 to-rose-500 hover:from-rose-500 hover:to-slate-900 hover:no-underline font-bold shadow-lg transition-all duration-300 cursor-pointer"
+              >
+                Sign In
+              </Button>
+            </SignInButton>
+          </Show>
+
+          <Show when="signed-in">
+            <UserButton />
+          </Show>
+        </div>
+      </nav>
+    </header>
   );
 }
