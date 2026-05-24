@@ -2,9 +2,15 @@ import SummaryCard from '@/components/summaries/summary-card';
 import { Button } from '@/components/ui/button';
 import { getSummaries } from '@/lib/summaries';
 import { currentUser } from '@clerk/nextjs/server';
-import { Plus, SquarePlay } from 'lucide-react';
+import { ArrowRight, Plus, SquarePlay } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import {
+  MotionDiv,
+  MotionH1,
+  MotionP,
+} from '@/components/common/motion-wrapper';
+import { containerVariants, itemVariants } from '@/utils/constants';
 
 export default async function DashboardPage() {
   const user = await currentUser();
@@ -19,7 +25,10 @@ export default async function DashboardPage() {
 
   return (
     <main style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
-      <div
+      <MotionDiv
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
         style={{
           maxWidth: '1200px',
           margin: '0 auto',
@@ -43,7 +52,8 @@ export default async function DashboardPage() {
           <div
             style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}
           >
-            <h1
+            <MotionH1
+              variants={itemVariants as any}
               style={{
                 fontSize: '2.25rem',
                 fontWeight: 800,
@@ -52,31 +62,40 @@ export default async function DashboardPage() {
               }}
             >
               Your Summaries
-            </h1>
-            <p style={{ color: '#6b7280', margin: 0, fontSize: '1rem' }}>
+            </MotionH1>
+            <MotionP
+              variants={itemVariants as any}
+              style={{ color: '#6b7280', margin: 0, fontSize: '1rem' }}
+            >
               Transform your YouTube videos into concise, actionable insights
-            </p>
+            </MotionP>
           </div>
-          <Button
-            asChild
-            style={{
-              backgroundColor: '#e11d48',
-              color: 'white',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              textDecoration: 'none',
-            }}
+          <MotionDiv
+            variants={itemVariants as any}
+            whileHover={{ scale: 1.05 }}
           >
-            <Link href={'/'}>
-              <Plus style={{ width: '1.25rem', height: '1.25rem' }} />
-              New Summary
-            </Link>
-          </Button>
+            <Button
+              asChild
+              style={{
+                backgroundColor: '#e11d48',
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                textDecoration: 'none',
+              }}
+            >
+              <Link href={'/'}>
+                <Plus style={{ width: '1.25rem', height: '1.25rem' }} />
+                New Summary
+              </Link>
+            </Button>
+          </MotionDiv>
         </div>
 
         {/* Limit Warning */}
-        {/* <div
+        {/* <MotionDiv
+          variants={itemVariants as any}
           style={{
             backgroundColor: '#fff1f2',
             border: '1px solid #fecdd3',
@@ -104,11 +123,12 @@ export default async function DashboardPage() {
             </Link>{' '}
             for unlimited processing.
           </p>
-        </div> */}
+        </MotionDiv> */}
 
         {/* Empty State / Grid */}
         {summaries.length === 0 ? (
-          <div
+          <MotionDiv
+            variants={itemVariants as any}
             style={{
               textAlign: 'center',
               padding: '4rem 1rem',
@@ -150,7 +170,7 @@ export default async function DashboardPage() {
             >
               <Link href={'/'}>Create Your First Summary</Link>
             </Button>
-          </div>
+          </MotionDiv>
         ) : (
           <div
             style={{
@@ -165,7 +185,7 @@ export default async function DashboardPage() {
             ))}
           </div>
         )}
-      </div>
+      </MotionDiv>
     </main>
   );
 }

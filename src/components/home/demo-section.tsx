@@ -1,37 +1,92 @@
-import { Pizza } from 'lucide-react';
+import { SquarePlay } from 'lucide-react';
+import { MotionDiv, MotionH3 } from '../common/motion-wrapper';
+import { SummaryViewer } from '../summaries/summary-viewer';
+
+const DEMO_SUMMARY = `# Introduction to Next.js
+• Next.js is a React framework for production.
+• It provides features like server-side rendering and static site generation.
+
+# Why Use Next.js?
+• Excellent for SEO and initial page load speed.
+• Built-in routing system based on the file system.
+• API routes let you build full-stack applications.`;
 
 export default function DemoSection() {
   return (
-    <section>
-      <div className="py-12 lg:py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 lg:pt-12">
+    <section style={{ padding: '4rem 1rem', backgroundColor: '#fdf2f8' }}>
+      <div
+        style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2rem',
+        }}
+      >
         <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 transform-gpu overflow-hidden blur-3xl"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
         >
           <div
-            className="relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-r from-emerald-500 via-teal-500 to-cyan-500 opacity-30 sm:left-[calc(50%-36rem)] sm:w-288.75"
             style={{
-              clipPath:
-                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1%, 97.7%, 74.1% 44.1%',
+              padding: '1rem',
+              backgroundColor: 'white',
+              borderRadius: '50%',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+              marginBottom: '1.5rem',
             }}
-          />
-        </div>
-        <div className="flex flex-col items-center text-center space-y-4">
-          <div className="inline-flex items-center justify-center p-2 rounded-2xl bg-gray-100/80 backdrop-blur-xs border border-gray-500/20 mb-4">
-            <Pizza className="w-6 h-6 text-rose-500" />
+          >
+            <SquarePlay
+              style={{ width: '2rem', height: '2rem', color: '#f43f5e' }}
+            />
           </div>
-          <div className="text-center mb-16">
-            <h3 className="font-bold text-3xl max-w-2xl mx-auto px-4 sm:px-6">
-              Watch how YT Summariser transform{' '}
-              <span className="bg-linear-to-r from-rose-500 to-rose-700 bg-clip-text text-transparent">
-                this YouTube Video
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <MotionH3
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              style={{
+                fontWeight: 700,
+                fontSize: '2.25rem',
+                maxWidth: '42rem',
+                margin: '0 auto',
+                color: '#111827',
+                lineHeight: 1.3,
+              }}
+            >
+              Watch how AI YT Summariser transforms{' '}
+              <span
+                style={{
+                  backgroundImage:
+                    'linear-gradient(to right, #f43f5e, #be123c)',
+                  WebkitBackgroundClip: 'text',
+                  color: 'transparent',
+                }}
+              >
+                this Next.js course video
               </span>{' '}
               into an easy-to-read summary!
-            </h3>
+            </MotionH3>
           </div>
-          <div className="flex justify-center items-center px-2 sm:px-4 lg:px-6">
-            {/* Summary Viewer */}
-          </div>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <MotionDiv
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            style={{ width: '100%', maxWidth: '800px' }}
+          >
+            <SummaryViewer summary={DEMO_SUMMARY} />
+          </MotionDiv>
         </div>
       </div>
     </section>

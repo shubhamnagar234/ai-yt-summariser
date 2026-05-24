@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { parseSection } from '@/utils/summary-helpers';
 import ProgressBar from './progress-bar';
 import { NavigationControls } from './navigation-controls';
+import { MotionDiv } from '../common/motion-wrapper';
+import ContentSection from './content-section';
 
 const SectionTitle = ({ title }: { title: string }) => {
   return (
@@ -17,7 +19,7 @@ const SectionTitle = ({ title }: { title: string }) => {
         top: 0,
         paddingTop: '0.5rem',
         paddingBottom: '1rem',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(4px)',
         zIndex: 10,
       }}
@@ -55,56 +57,45 @@ export function SummaryViewer({ summary }: { summary: string }) {
     <div
       style={{
         position: 'relative',
-        height: '600px',
+        height: '500px', // Standardized height
         width: '100%',
+        maxWidth: '700px', // Contrains the width so it doesn't stretch
+        margin: '0 auto',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
+        backgroundColor: '#ffffff', // Solid white background
+        borderRadius: '1.5rem', // Rounded corners
+        boxShadow:
+          '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)', // Heavy floating shadow
+        border: '1px solid #fce7f3', // Light rose border
       }}
     >
       <ProgressBar sections={sections} currentSection={currentSection} />
 
-      <div
+      <MotionDiv
+        key={currentSection}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
+        exit={{ opacity: 0 }}
         style={{
           flex: 1,
           overflowY: 'auto',
-          paddingTop: '2rem',
-          paddingBottom: '5rem',
-          paddingLeft: '1.5rem',
-          paddingRight: '1.5rem',
-          scrollbarWidth: 'none',
+          paddingTop: '2.5rem', // Clears the absolute progress bar
+          paddingBottom: '5rem', // Clears the absolute nav controls
+          paddingLeft: '2rem',
+          paddingRight: '2rem',
+          scrollbarWidth: 'none', // Hides standard scrollbar
         }}
       >
         <SectionTitle title={sections[currentSection]?.title} />
 
-        <ul
-          style={{
-            listStyleType: 'none',
-            padding: 0,
-            margin: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-          }}
-        >
-          {sections[currentSection]?.points.map((point, index) => (
-            <li
-              key={index}
-              style={{
-                padding: '1rem',
-                backgroundColor: '#f9fafb',
-                borderRadius: '0.75rem',
-                border: '1px solid #f3f4f6',
-                fontSize: '1.125rem',
-                color: '#374151',
-                lineHeight: 1.6,
-              }}
-            >
-              {point}
-            </li>
-          ))}
-        </ul>
-      </div>
+        <ContentSection
+          title={sections[currentSection]?.title}
+          points={sections[currentSection]?.points || []}
+        />
+      </MotionDiv>
 
       <NavigationControls
         currentSection={currentSection}

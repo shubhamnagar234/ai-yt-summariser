@@ -3,6 +3,7 @@ import { SummaryHeader } from '@/components/summaries/summary-header';
 import { SummaryViewer } from '@/components/summaries/summary-viewer';
 import { getSummaryById } from '@/lib/summaries';
 import { notFound } from 'next/navigation';
+import { MotionDiv } from '@/components/common/motion-wrapper';
 
 export default async function SummaryPage(props: {
   params: Promise<{ id: string }>;
@@ -31,11 +32,17 @@ export default async function SummaryPage(props: {
           gap: '2rem',
         }}
       >
-        <SummaryHeader
-          title={summary.title}
-          createdAt={summary.created_at}
-          readingTime={readingTime}
-        />
+        <MotionDiv
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <SummaryHeader
+            title={summary.title}
+            createdAt={summary.created_at}
+            readingTime={readingTime}
+          />
+        </MotionDiv>
 
         <SourceInfo
           title={summary.title}
@@ -44,7 +51,10 @@ export default async function SummaryPage(props: {
           createdAt={summary.created_at}
         />
 
-        <div
+        <MotionDiv
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr',
@@ -84,7 +94,7 @@ export default async function SummaryPage(props: {
           >
             <SummaryViewer summary={summary.summary_text} />
           </div>
-        </div>
+        </MotionDiv>
       </div>
     </div>
   );
