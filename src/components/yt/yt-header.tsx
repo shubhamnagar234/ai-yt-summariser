@@ -1,3 +1,5 @@
+import { itemVariants } from '@/utils/constants';
+import { MotionDiv } from '../common/motion-wrapper';
 import { Badge } from '../ui/badge';
 import { Sparkles } from 'lucide-react';
 
@@ -13,53 +15,53 @@ export default function YtHeader() {
         textAlign: 'center',
       }}
     >
-      <div
+      <MotionDiv
+        variants={itemVariants as any}
         style={{
-          position: 'relative',
           padding: '1px',
-          overflow: 'hidden',
           borderRadius: '9999px',
-          background: 'linear-gradient(to right, #fecdd3, #f43f5e, #9f1239)',
+          backgroundImage:
+            'linear-gradient(to right, #fecdd3, #f43f5e, #9f1239)',
         }}
       >
         <Badge
-          variant={'secondary'}
+          variant="secondary"
           style={{
-            position: 'relative',
             padding: '0.5rem 1.5rem',
             fontSize: '1rem',
             fontWeight: 500,
-            backgroundColor: '#ffffff',
+            backgroundColor: 'white',
             borderRadius: '9999px',
             display: 'flex',
             alignItems: 'center',
-            cursor: 'default',
+            border: 'none',
           }}
         >
           <Sparkles
             style={{
-              height: '1.5rem',
               width: '1.5rem',
+              height: '1.5rem',
               marginRight: '0.5rem',
               color: '#e11d48',
             }}
           />
-          <p style={{ fontSize: '1rem', color: '#e11d48', margin: 0 }}>
-            AI-Powered Video Summaries
+          <p style={{ color: '#e11d48', margin: 0 }}>
+            AI-Powered Content Extraction
           </p>
         </Badge>
-      </div>
+      </MotionDiv>
 
-      <div
+      <MotionDiv
+        variants={itemVariants as any}
         style={{
           textTransform: 'capitalize',
-          fontSize: '2.25rem',
-          fontWeight: 'bold',
-          letterSpacing: '-0.025em',
+          fontSize: '2.5rem',
+          fontWeight: 800,
           color: '#111827',
+          margin: 0,
         }}
       >
-        Start Analyzing{' '}
+        Start Pasting{' '}
         <span style={{ position: 'relative', display: 'inline-block' }}>
           <span
             style={{ position: 'relative', zIndex: 10, padding: '0 0.5rem' }}
@@ -69,31 +71,31 @@ export default function YtHeader() {
           <span
             style={{
               position: 'absolute',
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
+              inset: 0,
               backgroundColor: 'rgba(254, 205, 211, 0.5)',
-              transform: 'rotate(-2deg) skewY(-1deg)',
               borderRadius: '0.5rem',
+              transform: 'rotate(-2deg) skewY(-1deg)',
             }}
             aria-hidden="true"
           ></span>
         </span>
-      </div>
+      </MotionDiv>
 
-      <div
+      <MotionDiv
+        variants={itemVariants as any}
         style={{
           marginTop: '0.5rem',
           fontSize: '1.125rem',
-          lineHeight: '2rem',
           color: '#4b5563',
           maxWidth: '42rem',
           textAlign: 'center',
         }}
       >
-        <p>Paste a YouTube URL and let our AI do the magic!</p>
-      </div>
+        <p style={{ margin: 0 }}>
+          Drop your YouTube URL below and let our AI extract the executive
+          insights!
+        </p>
+      </MotionDiv>
     </div>
   );
 }

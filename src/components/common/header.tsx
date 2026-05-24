@@ -1,17 +1,19 @@
 import { SquarePlay } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { SignInButton, Show, UserButton } from '@clerk/nextjs';
+import { Button } from '@/components/ui/button';
 
 export default function Header() {
   return (
     <header
       style={{
         width: '100%',
-        position: 'absolute',
+        position: 'sticky',
         top: 0,
-        left: 0,
         zIndex: 50,
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(8px)',
+        borderBottom: '1px solid #f3f4f6',
       }}
     >
       <nav
@@ -19,7 +21,7 @@ export default function Header() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '1.5rem 2rem',
+          padding: '1rem 2rem',
           margin: '0 auto',
           maxWidth: '1200px',
           boxSizing: 'border-box',
@@ -55,6 +57,18 @@ export default function Header() {
 
         {/* Right: Navigation & Auth Section */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          {/* <Link
+            href="/#pricing"
+            style={{
+              textDecoration: 'none',
+              color: '#374151',
+              fontWeight: 500,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Pricing
+          </Link> */}
+
           <Show when="signed-in">
             <Link
               href="/dashboard"
@@ -73,7 +87,7 @@ export default function Header() {
             <SignInButton mode="modal">
               <Button
                 variant={'link'}
-                className="text-white rounded-full px-5 py-5 bg-linear-to-r from-slate-900 to-rose-500 hover:from-rose-500 hover:to-slate-900 hover:no-underline font-bold shadow-lg transition-all duration-300 cursor-pointer"
+                className="text-white rounded-full px-4 py-4 bg-linear-to-r from-slate-900 to-rose-500 hover:from-rose-500 hover:to-slate-900 hover:no-underline font-bold shadow-lg transition-all duration-300 cursor-pointer"
               >
                 Sign In
               </Button>

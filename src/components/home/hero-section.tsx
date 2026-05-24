@@ -1,46 +1,145 @@
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import {
+  MotionDiv,
+  MotionH1,
+  MotionH2,
+  MotionSection,
+  MotionSpan,
+} from '@/components/common/motion-wrapper';
+import {
+  buttonVariants,
+  containerVariants,
+  itemVariants,
+} from '@/utils/constants';
+import Link from 'next/link';
 
 export default function HeroSection() {
   return (
-    <section className="relative mx-auto flex flex-col z-0 items-center justify-center py-16 sm:py-20 lg:pb-28 transition-all animate-in lg:px-12 max-w-7xl">
-      <div className="">
-        <div className="flex items-center justify-center">
-          <div className="relative p-px overflow-hidden rounded-full bg-linear-to-r from-rose-200 via-rose-500 to-rose-800 animate-gradient-x group">
-            <Badge className="relative px-6 py-2 text-base font-medium bg-white rounded-full group-hover:bg-gray-50 transition-colors duration-200">
-              <Sparkles className="w-6 h-6 mr-2 text-rose-600 animate-pulse" />
-              <p className="text-rose-600">Powered by AI</p>
-            </Badge>
-          </div>
-        </div>
-        <h1 className="font-bold py-6 text-center">
-          Transform YouTube Videos into{' '}
-          <span className="relative inline-block">
-            <span className="relative z-10 px-2">concise</span>
-            <span
-              className="absolute inset-0 bg-rose-200 -rotate-2 rounded-lg transform -skew-y-1"
-              area-hidden="true"
-            ></span>
-          </span>{' '}
-          summaries
-        </h1>
-        <h2 className="text-lg sm:text-xl lg:text-2xl text-center px-4 lg:px-0 max-w-4xl text-gray-600">
-          Get a beautiful summary reel of the youtube videos in seconds
-        </h2>
-        <div className="flex items-center justify-center">
-          <Button
-            variant={'link'}
-            className="text-white mt-6 text-base sm:text-lg lg:text-xl rounded-full px-8 sm:px-10 lg:px-12 py-6 sm:py-7 lg:py-8 lg:mt-16 bg-linear-to-r from-slate-900 to-rose-500 hover:from-rose-500 hover:to-slate-900 hover:no-underline font-bold shadow-lg transition-all duration-300"
+    <MotionSection
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      style={{
+        position: 'relative',
+        margin: '0 auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '4rem 1rem',
+        maxWidth: '1200px',
+        zIndex: 0,
+      }}
+    >
+      <MotionDiv
+        variants={itemVariants as any}
+        style={{
+          padding: '1px',
+          borderRadius: '9999px',
+          backgroundImage:
+            'linear-gradient(to right, #fecdd3, #f43f5e, #9f1239)',
+        }}
+      >
+        <Badge
+          style={{
+            padding: '0.5rem 1.5rem',
+            fontSize: '1rem',
+            fontWeight: 500,
+            backgroundColor: 'white',
+            borderRadius: '9999px',
+            display: 'flex',
+            alignItems: 'center',
+            border: 'none',
+          }}
+        >
+          <Sparkles
+            style={{
+              width: '1.5rem',
+              height: '1.5rem',
+              marginRight: '0.5rem',
+              color: '#e11d48',
+            }}
+          />
+          <p style={{ color: '#e11d48', margin: 0 }}>Powered by AI</p>
+        </Badge>
+      </MotionDiv>
+
+      <MotionH1
+        variants={itemVariants as any}
+        style={{
+          fontWeight: 800,
+          padding: '1.5rem 0',
+          textAlign: 'center',
+          color: '#111827',
+          margin: 0,
+          lineHeight: 1.2,
+        }}
+      >
+        Transform YouTube Videos into{' '}
+        <span style={{ position: 'relative', display: 'inline-block' }}>
+          <MotionSpan
+            whileHover={buttonVariants.hover as any}
+            style={{ position: 'relative', zIndex: 10, padding: '0 0.5rem' }}
           >
-            <Link href="/dashboard" className="flex gap-2 items-center">
-              <span>Try YT Summariser</span>
-              <ArrowRight className="animate-pulse" />
-            </Link>
-          </Button>
-        </div>
-      </div>
-    </section>
+            concise
+          </MotionSpan>
+          <span
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: '#fecdd3',
+              borderRadius: '0.5rem',
+              transform: 'rotate(-2deg) skewY(-1deg)',
+            }}
+            aria-hidden="true"
+          ></span>
+        </span>{' '}
+        summaries
+      </MotionH1>
+
+      <MotionH2
+        variants={itemVariants as any}
+        style={{
+          fontSize: '1.25rem',
+          textAlign: 'center',
+          maxWidth: '56rem',
+          color: '#4b5563',
+          margin: 0,
+          fontWeight: 400,
+        }}
+      >
+        Get a beautiful summary reel of the video in seconds
+      </MotionH2>
+
+      <MotionDiv
+        variants={itemVariants as any}
+        whileHover={buttonVariants.hover as any}
+      >
+        <Button
+          asChild
+          style={{
+            marginTop: '2.5rem',
+            fontSize: '1.125rem',
+            borderRadius: '9999px',
+            padding: '1.5rem 3rem',
+            backgroundImage: 'linear-gradient(to right, #0f172a, #e11d48)',
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            textDecoration: 'none',
+          }}
+        >
+          <Link href="/dashboard">
+            <span>Try AI YT Summariser</span>
+            <ArrowRight />
+          </Link>
+        </Button>
+      </MotionDiv>
+    </MotionSection>
   );
 }
