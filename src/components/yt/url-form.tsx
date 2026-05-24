@@ -33,7 +33,7 @@ export default function UrlForm() {
       if (!validatedFields.success) {
         toast.error('Invalid link', {
           description:
-            validatedFields.error.issues?.[0]?.message ?? 'Invalid file',
+            validatedFields.error.issues?.[0]?.message ?? 'Invalid URL',
         });
         setIsLoading(false);
         return;
@@ -45,7 +45,6 @@ export default function UrlForm() {
 
       // Pass the URL directly to the action
       const result = await generateYTSummary(url);
-
       const { data = null, message = null } = result || {};
 
       if (data) {
