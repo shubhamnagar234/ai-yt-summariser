@@ -95,7 +95,7 @@ export default function SummaryCard({ summary }: { summary: any }) {
             gap: '1rem',
           }}
         >
-          <SummaryHeader title={summary.title} createdAt={summary.created_at} />
+          <SummaryHeader title={summary.title} createdAt={summary.createdAt} />
 
           <p
             style={{
@@ -108,7 +108,7 @@ export default function SummaryCard({ summary }: { summary: any }) {
               overflow: 'hidden',
             }}
           >
-            {summary.summary_text}
+            {summary.summaryText}
           </p>
 
           <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>

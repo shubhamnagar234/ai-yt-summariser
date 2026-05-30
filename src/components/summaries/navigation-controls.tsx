@@ -21,10 +21,11 @@ export function NavigationControls({
         bottom: 0,
         left: 0,
         right: 0,
-        padding: '1rem',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-        backdropFilter: 'blur(4px)',
-        borderTop: '1px solid #fce7f3',
+        zIndex: 20,
+        padding: '0.875rem 1.25rem',
+        background: 'rgba(255, 255, 255, 0.9)',
+        backdropFilter: 'blur(8px)',
+        borderTop: '1px solid rgba(252, 231, 243, 0.8)',
       }}
     >
       <div
@@ -41,29 +42,37 @@ export function NavigationControls({
           disabled={currentSection === 0}
           style={{
             borderRadius: '9999px',
-            width: '3rem',
-            height: '3rem',
+            width: '2.5rem',
+            height: '2.5rem',
             color: '#e11d48',
             borderColor: '#fecdd3',
+            background: 'white',
+            boxShadow: '0 1px 4px rgba(225, 29, 72, 0.1)',
+            transition: 'all 0.2s ease',
           }}
         >
-          <ChevronLeft style={{ height: '1.5rem', width: '1.5rem' }} />
+          <ChevronLeft style={{ height: '1.25rem', width: '1.25rem' }} />
         </Button>
 
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        {/* Section dots */}
+        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
           {Array.from({ length: totalSections }).map((_, index) => (
             <button
               key={index}
               onClick={() => onSectionSelect(index)}
               style={{
-                width: '0.5rem',
+                width: currentSection === index ? '1.25rem' : '0.5rem',
                 height: '0.5rem',
                 borderRadius: '9999px',
                 border: 'none',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 backgroundColor:
-                  currentSection === index ? '#e11d48' : '#fecdd3',
+                  currentSection === index
+                    ? '#e11d48'
+                    : index < currentSection
+                      ? '#fda4af'
+                      : '#fce7f3',
               }}
             />
           ))}
@@ -76,13 +85,16 @@ export function NavigationControls({
           disabled={currentSection === totalSections - 1}
           style={{
             borderRadius: '9999px',
-            width: '3rem',
-            height: '3rem',
+            width: '2.5rem',
+            height: '2.5rem',
             color: '#e11d48',
             borderColor: '#fecdd3',
+            background: 'white',
+            boxShadow: '0 1px 4px rgba(225, 29, 72, 0.1)',
+            transition: 'all 0.2s ease',
           }}
         >
-          <ChevronRight style={{ height: '1.5rem', width: '1.5rem' }} />
+          <ChevronRight style={{ height: '1.25rem', width: '1.25rem' }} />
         </Button>
       </div>
     </div>

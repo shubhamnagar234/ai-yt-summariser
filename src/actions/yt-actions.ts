@@ -1,11 +1,12 @@
 'use server';
 
-import { getDBConnection } from '@/lib/db';
 import { generateSummaryFromGemini } from '@/lib/geminiai';
 import { fetchYoutubeMetadata } from '@/lib/youtube';
 import { generateSummaryFromOpenAI } from '@/lib/openai';
-import { auth } from '@clerk/nextjs/server';
+import { getSession } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
+import { db } from '@/db';
+import { videoSummaries } from '@/db/schema';
 interface YtSummaryType {
   url: string;
   summary: string;
@@ -77,22 +78,19 @@ async function saveYtSummary({
   videoId,
 }: YtSummaryType & { userId: string }) {
   try {
-    const sql = await getDBConnection();
-    const [savedSummary] = await sql`
-      INSERT INTO video_summaries(
-        user_id,
-        video_url,
-        video_id,
-        summary_text,
-        title
-      ) VALUES (
-        ${userId},
-        ${url},
-        ${videoId},
-        ${summary},
-        ${title}
-      ) RETURNING id, summary_text
-    `;
+    const [savedSummary] = await db
+      .insert(videoSummaries)
+      .values({
+        userId,
+        videoUrl: url,
+        videoId,
+        summaryText: summary,
+        title,
+      })
+      .returning({
+        id: videoSummaries.id,
+        summaryText: videoSummaries.summaryText,
+      });
     return savedSummary;
   } catch (error) {
     console.error('Error saving video summary', error);
@@ -108,8 +106,8 @@ export async function storeYtSummaryAction({
 }: YtSummaryType) {
   let savedSummary: any;
   try {
-    const { userId } = await auth();
-    if (!userId) {
+    const session = await getSession();
+    if (!session?.userId) {
       return {
         success: false,
         message: 'User not found',
@@ -117,7 +115,7 @@ export async function storeYtSummaryAction({
     }
 
     savedSummary = await saveYtSummary({
-      userId,
+      userId: session.userId,
       url,
       summary,
       title,
