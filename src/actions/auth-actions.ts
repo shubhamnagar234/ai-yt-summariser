@@ -13,7 +13,7 @@ export async function signUpAction(formData: FormData) {
   const fullName = formData.get('fullName') as string;
 
   if (!email || !password || !fullName) {
-    return { error: 'All fields are required' };
+    return { success: false, message: 'All fields are required' };
   }
 
   try {
@@ -23,7 +23,7 @@ export async function signUpAction(formData: FormData) {
     });
 
     if (existingUser) {
-      return { error: 'User with this email already exists' };
+      return { success: false, message: 'User with this email already exists' };
     }
 
     // Hash password
@@ -39,14 +39,14 @@ export async function signUpAction(formData: FormData) {
       })
       .returning();
 
-    // Directly create session (skipping email verification as requested)
+    // Directly create session
     await createSession(newUser.id);
   } catch (err: any) {
     console.error('Sign up error', err);
-    return { error: 'Something went wrong during sign up' };
+    return { success: false, message: 'Something went wrong during sign up' };
   }
 
-  redirect('/dashboard');
+  return { success: true, message: 'Account created successfully' };
 }
 
 export async function signInAction(formData: FormData) {
@@ -54,7 +54,7 @@ export async function signInAction(formData: FormData) {
   const password = formData.get('password') as string;
 
   if (!email || !password) {
-    return { error: 'Email and password are required' };
+    return { success: false, message: 'Email and password are required' };
   }
 
   try {
@@ -63,21 +63,21 @@ export async function signInAction(formData: FormData) {
     });
 
     if (!user || !user.passwordHash) {
-      return { error: 'Invalid email or password' };
+      return { success: false, message: 'Invalid email or password' };
     }
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
-      return { error: 'Invalid email or password' };
+      return { success: false, message: 'Invalid email or password' };
     }
 
     await createSession(user.id);
   } catch (err) {
     console.error('Sign in error', err);
-    return { error: 'Something went wrong during sign in' };
+    return { success: false, message: 'Something went wrong during sign in' };
   }
 
-  redirect('/dashboard');
+  return { success: true, message: 'Signed in successfully' };
 }
 
 export async function signOutAction() {
