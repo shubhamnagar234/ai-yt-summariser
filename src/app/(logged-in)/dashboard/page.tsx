@@ -1,7 +1,7 @@
 import SummaryCard from '@/components/summaries/summary-card';
 import { Button } from '@/components/ui/button';
 import { getSummaries } from '@/lib/summaries';
-import { currentUser } from '@clerk/nextjs/server';
+import { getSession } from '@/lib/auth';
 import { ArrowRight, Plus, SquarePlay } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -13,8 +13,8 @@ import {
 import { containerVariants, itemVariants } from '@/utils/constants';
 
 export default async function DashboardPage() {
-  const user = await currentUser();
-  const userId = user?.id;
+  const session = await getSession();
+  const userId = session?.userId;
 
   if (!userId) {
     return redirect('/sign-in');

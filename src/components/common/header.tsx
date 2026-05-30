@@ -1,9 +1,12 @@
 import { SquarePlay } from 'lucide-react';
 import Link from 'next/link';
-import { SignInButton, Show, UserButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
+import { getSession } from '@/lib/auth';
+import { SignOutButton } from './sign-out-button';
 
-export default function Header() {
+export default async function Header() {
+  const session = await getSession();
+
   return (
     <header
       style={{
@@ -57,46 +60,31 @@ export default function Header() {
 
         {/* Right: Navigation & Auth Section */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-          {/* <Link
-            href="/#pricing"
-            style={{
-              textDecoration: 'none',
-              color: '#374151',
-              fontWeight: 500,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Pricing
-          </Link> */}
-
-          <Show when="signed-in">
-            <Link
-              href="/dashboard"
-              style={{
-                textDecoration: 'none',
-                color: '#374151',
-                fontWeight: 500,
-                whiteSpace: 'nowrap',
-              }}
-            >
-              Your Summaries
-            </Link>
-          </Show>
-
-          <Show when="signed-out">
-            <SignInButton mode="modal">
+          {session?.userId ? (
+            <>
+              <Link
+                href="/dashboard"
+                style={{
+                  textDecoration: 'none',
+                  color: '#374151',
+                  fontWeight: 500,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Your Summaries
+              </Link>
+              <SignOutButton />
+            </>
+          ) : (
+            <Link href="/sign-in">
               <Button
                 variant={'link'}
                 className="text-white rounded-full px-4 py-4 bg-linear-to-r from-slate-900 to-rose-500 hover:from-rose-500 hover:to-slate-900 hover:no-underline font-bold shadow-lg transition-all duration-300 cursor-pointer"
               >
                 Sign In
               </Button>
-            </SignInButton>
-          </Show>
-
-          <Show when="signed-in">
-            <UserButton />
-          </Show>
+            </Link>
+          )}
         </div>
       </nav>
     </header>
