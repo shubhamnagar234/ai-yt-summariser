@@ -9,8 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^7.3.7",
     "@google/genai": "^2.6.0",
+    "@google/generative-ai": "^0.24.1",
     "@neondatabase/serverless": "^1.1.0",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",

@@ -13,7 +13,7 @@ export default async function SummaryPage(props: {
 
   if (!summary) notFound();
 
-  const readingTime = Math.ceil((summary.word_count || 0) / 200);
+  const readingTime = Math.ceil((summary.wordCount || 0) / 200);
 
   return (
     <div
@@ -39,16 +39,16 @@ export default async function SummaryPage(props: {
         >
           <SummaryHeader
             title={summary.title}
-            createdAt={summary.created_at}
+            createdAt={summary.createdAt}
             readingTime={readingTime}
           />
         </MotionDiv>
 
         <SourceInfo
           title={summary.title}
-          summaryText={summary.summary_text}
-          videoUrl={summary.video_url}
-          createdAt={summary.created_at}
+          summaryText={summary.summaryText}
+          videoUrl={summary.videoUrl}
+          createdAt={summary.createdAt}
         />
 
         <MotionDiv
@@ -73,7 +73,7 @@ export default async function SummaryPage(props: {
             }}
           >
             <iframe
-              src={`https://www.youtube.com/embed/${summary.video_id}`}
+              src={`https://www.youtube.com/embed/${summary.videoId}`}
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -92,7 +92,7 @@ export default async function SummaryPage(props: {
               border: '1px solid #fce7f3',
             }}
           >
-            <SummaryViewer summary={summary.summary_text} />
+            <SummaryViewer summary={summary.summaryText} />
           </div>
         </MotionDiv>
       </div>

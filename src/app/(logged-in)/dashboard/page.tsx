@@ -85,7 +85,7 @@ export default async function DashboardPage() {
                 textDecoration: 'none',
               }}
             >
-              <Link href={'/'}>
+              <Link href={'/yt'}>
                 <Plus style={{ width: '1.25rem', height: '1.25rem' }} />
                 New Summary
               </Link>
@@ -168,7 +168,7 @@ export default async function DashboardPage() {
                 textDecoration: 'none',
               }}
             >
-              <Link href={'/'}>Create Your First Summary</Link>
+              <Link href={'/yt'}>Create Your First Summary</Link>
             </Button>
           </MotionDiv>
         ) : (
