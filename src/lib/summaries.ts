@@ -1,32 +1,34 @@
-import { getDBConnection } from './db';
+import { db } from '@/db';
+import { videoSummaries } from '@/db/schema';
+import { eq, desc } from 'drizzle-orm';
 
 export async function getSummaries(userId: string) {
-  const sql = await getDBConnection();
-  // Updated to video_summaries
-  const summaries =
-    await sql`SELECT * from video_summaries WHERE user_id = ${userId} ORDER BY created_at DESC`;
-  return summaries;
+  try {
+    const summaries = await db.query.videoSummaries.findMany({
+      where: eq(videoSummaries.userId, userId),
+      orderBy: [desc(videoSummaries.createdAt)],
+    });
+    return summaries;
+  } catch (err) {
+    console.error('Error fetching summaries', err);
+    return [];
+  }
 }
 
 export async function getSummaryById(id: string) {
   try {
-    const sql = await getDBConnection();
-    // Updated fields to match your schema (video_url, video_id instead of file_name)
-    const [summary] = await sql`SELECT  
-    id, 
-    user_id, 
-    title, 
-    video_url,
-    video_id,
-    summary_text, 
-    status,
-    created_at, 
-    updated_at,  
-    LENGTH(summary_text) - LENGTH(REPLACE(summary_text, ' ', '')) + 1 as word_count  
-    FROM video_summaries 
-    WHERE id = ${id}`;
+    const summary = await db.query.videoSummaries.findFirst({
+      where: eq(videoSummaries.id, id),
+    });
 
-    return summary;
+    if (!summary) return null;
+    
+    // Add dynamically calculated word count
+    const wordCount = summary.summaryText 
+      ? summary.summaryText.split(/\s+/).filter(Boolean).length 
+      : 0;
+
+    return { ...summary, wordCount };
   } catch (err) {
     console.error('Error fetching summary by id', err);
     return null;
