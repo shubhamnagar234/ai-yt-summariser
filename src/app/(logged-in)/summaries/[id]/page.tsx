@@ -1,9 +1,11 @@
+import BgGradient from '@/components/common/bg-gradient';
 import { SourceInfo } from '@/components/summaries/source-info';
 import { SummaryHeader } from '@/components/summaries/summary-header';
 import { SummaryViewer } from '@/components/summaries/summary-viewer';
 import { getSummaryById } from '@/lib/summaries';
 import { notFound } from 'next/navigation';
 import { MotionDiv } from '@/components/common/motion-wrapper';
+import { FileText } from 'lucide-react';
 
 export default async function SummaryPage(props: {
   params: Promise<{ id: string }>;
@@ -16,85 +18,61 @@ export default async function SummaryPage(props: {
   const readingTime = Math.ceil((summary.wordCount || 0) / 200);
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        backgroundColor: '#fdf2f8',
-        padding: '3rem 1rem',
-      }}
-    >
-      <div
-        style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2rem',
-        }}
-      >
-        <MotionDiv
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <SummaryHeader
+    <div className="relative isolate min-h-screen bg-linear-to-b from-rose-50/40 to-white">
+      <BgGradient className="from-rose-400 via-rose-300 to-orange-200" />
+      <div className="container mx-auto flex flex-col gap-4">
+        <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-12 lg:py-24">
+          <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col"
+          >
+            <SummaryHeader
+              title={summary.title}
+              createdAt={summary.createdAt}
+              readingTime={readingTime}
+            />
+          </MotionDiv>
+
+          <SourceInfo
             title={summary.title}
+            summaryText={summary.summaryText}
+            videoUrl={summary.videoUrl}
             createdAt={summary.createdAt}
-            readingTime={readingTime}
           />
-        </MotionDiv>
 
-        <SourceInfo
-          title={summary.title}
-          summaryText={summary.summaryText}
-          videoUrl={summary.videoUrl}
-          createdAt={summary.createdAt}
-        />
-
-        <MotionDiv
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr',
-            gap: '2rem',
-            marginTop: '1rem',
-          }}
-        >
-          {/* YouTube Video Player */}
-          <div
-            style={{
-              width: '100%',
-              aspectRatio: '16/9',
-              borderRadius: '1rem',
-              overflow: 'hidden',
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-            }}
+          <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="relative mt-4 sm:mt-8 lg:mt-16 flex flex-col gap-8 max-w-4xl mx-auto w-full"
           >
-            <iframe
-              src={`https://www.youtube.com/embed/${summary.videoId}`}
-              title="YouTube video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              style={{ width: '100%', height: '100%', border: 'none' }}
-            ></iframe>
-          </div>
+            {/* YouTube Video Player */}
+            <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-xl">
+              <iframe
+                src={`https://www.youtube.com/embed/${summary.videoId}`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full border-none"
+              ></iframe>
+            </div>
 
-          {/* AI Reader UI */}
-          <div
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: '1.5rem',
-              padding: '2rem',
-              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
-              border: '1px solid #fce7f3',
-            }}
-          >
-            <SummaryViewer summary={summary.summaryText} />
-          </div>
-        </MotionDiv>
+            {/* AI Reader UI */}
+            <div className="relative p-4 sm:p-6 lg:p-8 bg-white/80 backdrop-blur-md rounded-2xl sm:rounded-3xl shadow-xl border border-rose-100/30 transition-all duration-300 hover:shadow-2xl hover:bg-white/90">
+              <div className="absolute inset-0 bg-linear-to-br from-rose-50/50 via-orange-50/30 to-transparent opacity-30 rounded-2xl sm:rounded-3xl" />
+              <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground bg-white/90 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-xs">
+                <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-rose-400" />
+                {summary.wordCount?.toLocaleString()} words
+              </div>
+
+              <div className="relative mt-8 sm:mt-6 flex justify-center">
+                <SummaryViewer summary={summary.summaryText} />
+              </div>
+            </div>
+          </MotionDiv>
+        </div>
       </div>
     </div>
   );

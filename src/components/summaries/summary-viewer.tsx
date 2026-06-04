@@ -1,45 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import { parseSection } from '@/utils/summary-helpers';
-import ProgressBar from './progress-bar';
+import { Card } from '../ui/card';
 import { NavigationControls } from './navigation-controls';
+import ProgressBar from './progress-bar';
+import { parseSection } from '@/utils/summary-helpers';
 import { MotionDiv } from '../common/motion-wrapper';
 import ContentSection from './content-section';
 
 const SectionTitle = ({ title }: { title: string }) => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.5rem',
-        marginBottom: '1.5rem',
-      }}
-    >
-      <h2
-        style={{
-          fontSize: '1.75rem',
-          fontWeight: 800,
-          textAlign: 'center',
-          margin: 0,
-          background: 'linear-gradient(135deg, #be123c, #e11d48, #fb7185)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          letterSpacing: '-0.02em',
-        }}
-      >
+    <div className="flex flex-col gap-2 mb-6 sticky top-0 pt-2 pb-4 bg-background/80 backdrop-blur-xs z-10">
+      <h2 className="text-3xl lg:text-4xl font-bold text-center flex items-center justify-center gap-2">
         {title}
       </h2>
-      <div
-        style={{
-          width: '3rem',
-          height: '3px',
-          background: 'linear-gradient(to right, #e11d48, #fb7185)',
-          borderRadius: '9999px',
-          margin: '0 auto',
-        }}
-      />
     </div>
   );
 };
@@ -47,77 +21,37 @@ const SectionTitle = ({ title }: { title: string }) => {
 export function SummaryViewer({ summary }: { summary: string }) {
   const [currentSection, setCurrentSection] = useState(0);
 
+  const handlePrevious = () =>
+    setCurrentSection((prev) => Math.max(prev - 1, 0));
+
+  const handleNext = () =>
+    setCurrentSection((prev) => Math.min(prev + 1, sections.length - 1));
+
   const sections = summary
     .split('\n# ')
     .map((section) => section.trim())
     .filter(Boolean)
     .map(parseSection);
 
-  const handlePrevious = () =>
-    setCurrentSection((prev) => Math.max(prev - 1, 0));
-  const handleNext = () =>
-    setCurrentSection((prev) => Math.min(prev + 1, sections.length - 1));
-
   return (
-    <div
-      style={{
-        position: 'relative',
-        height: '520px',
-        width: '100%',
-        maxWidth: '780px',
-        margin: '0 auto',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        background: 'linear-gradient(145deg, #ffffff 0%, #fff1f2 100%)',
-        borderRadius: '1.75rem',
-        boxShadow:
-          '0 25px 50px -12px rgba(225, 29, 72, 0.15), 0 0 0 1px rgba(252, 231, 243, 0.8)',
-        border: '1px solid rgba(252, 231, 243, 0.8)',
-      }}
-    >
-      {/* Decorative top-right orb */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '-4rem',
-          right: '-4rem',
-          width: '12rem',
-          height: '12rem',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(251,113,133,0.15) 0%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-
+    <Card className="relative px-2 h-[500px] sm:h-[600px] lg:h-[700px] w-full xl:w-[600px] overflow-hidden bg-linear-to-br from-background via-background/95 to-rose-500/5 backdrop-blur-lg shadow-2xl rounded-3xl border border-rose-500/10">
       <ProgressBar sections={sections} currentSection={currentSection} />
-
       <MotionDiv
         key={currentSection}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25, ease: 'easeOut' }}
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          paddingTop: '3.5rem',
-          paddingBottom: '5.5rem',
-          paddingLeft: '2rem',
-          paddingRight: '2rem',
-          scrollbarWidth: 'none',
-          position: 'relative',
-          zIndex: 1,
-        }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
+        exit={{ opacity: 0 }}
+        className="h-full overflow-y-auto scrollbar-hide pt-12 sm:pt-16 pb-20 sm:pb-24"
       >
-        <SectionTitle title={sections[currentSection]?.title} />
-
-        <ContentSection
-          title={sections[currentSection]?.title}
-          points={sections[currentSection]?.points || []}
-        />
+        <div className="px-4 sm:px-6">
+          <SectionTitle title={sections[currentSection]?.title} />
+          <ContentSection
+            title={sections[currentSection]?.title}
+            points={sections[currentSection]?.points || []}
+          />
+        </div>
       </MotionDiv>
-
       <NavigationControls
         currentSection={currentSection}
         totalSections={sections.length}
@@ -125,6 +59,6 @@ export function SummaryViewer({ summary }: { summary: string }) {
         onNext={handleNext}
         onSectionSelect={setCurrentSection}
       />
-    </div>
+    </Card>
   );
 }
