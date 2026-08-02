@@ -13,14 +13,18 @@ export async function encrypt(payload: any) {
 }
 
 export async function decrypt(input: string): Promise<any> {
-  const { payload } = await jwtVerify(input, key, {
-    algorithms: ['HS256'],
-  });
-  return payload;
+  try {
+    const { payload } = await jwtVerify(input, key, {
+      algorithms: ['HS256'],
+    });
+    return payload;
+  } catch {
+    return null;
+  }
 }
 
 export async function createSession(userId: string) {
-  const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
   const session = await encrypt({ userId, expires });
 
   const cookieStore = await cookies();
@@ -53,7 +57,7 @@ export async function updateSession() {
     const payload = await decrypt(session);
     if (!payload) return;
 
-    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
     cookieStore.set('session', session, {
       expires,
       httpOnly: true,

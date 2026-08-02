@@ -48,10 +48,6 @@ export default function UrlForm() {
       const { data = null, message = null } = result || {};
 
       if (data) {
-        toast.success('Saving Summary...', {
-          description: 'Hang tight! We are saving your video insights.',
-        });
-
         if (data.summary) {
           const storeResult = await storeYtSummaryAction({
             summary: data.summary,
@@ -60,13 +56,19 @@ export default function UrlForm() {
             videoId: data.videoId,
           });
 
-          toast.success('Summary Generated!', {
-            description:
-              'Your video has been successfully summarized and saved!',
-          });
-
-          formRef.current?.reset();
-          router.push(`/summaries/${storeResult.id}`);
+          if (storeResult?.success && storeResult.id) {
+            toast.success('Summary Generated!', {
+              description:
+                'Your video has been successfully summarized and saved!',
+            });
+            formRef.current?.reset();
+            router.push(`/summaries/${storeResult.id}`);
+          } else {
+            toast.error('Failed to save summary', {
+              description: 'Something went wrong while saving. Please try again.',
+            });
+            setIsLoading(false);
+          }
         }
       } else {
         toast.error('Something went wrong', { description: message });
