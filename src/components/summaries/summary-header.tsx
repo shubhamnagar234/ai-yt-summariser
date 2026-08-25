@@ -13,116 +13,48 @@ export function SummaryHeader({
   readingTime: number;
 }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        gap: '1rem',
-        marginBottom: '1rem',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-      }}
-    >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            gap: '1rem',
-          }}
-        >
+    <div className="flex gap-4 mb-4 justify-between">
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center gap-4">
           <Badge
-            variant="secondary"
-            style={{
-              backgroundColor: '#fff1f2',
-              color: '#e11d48',
-              border: '1px solid #ffe4e6',
-              display: 'flex',
-              alignItems: 'center',
-              padding: '0.25rem 0.75rem',
-              borderRadius: '9999px',
-            }}
+            variant={'secondary'}
+            className="relative px-4 py-1.5 text-sm font-medium bg-white/80 backdrop-blur-xs rounded-full hover:bg-white/90 transition-all duration-200 shadow-xs hover:shadow-md"
           >
-            <Sparkles
-              style={{ height: '1rem', width: '1rem', marginRight: '0.375rem' }}
-            />
+            <Sparkles className="h-4 w-4 mr-1.5 text-rose-500" />
             AI Summary
           </Badge>
-
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.875rem',
-              color: '#6b7280',
-            }}
-          >
-            <Calendar
-              style={{ height: '1rem', width: '1rem', color: '#fb7185' }}
-            />
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Calendar className="h-4 w-4 text-rose-400" />
             {new Date(createdAt).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
             })}
           </div>
-
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.875rem',
-              color: '#6b7280',
-            }}
-          >
-            <Clock
-              style={{ height: '1rem', width: '1rem', color: '#fb7185' }}
-            />
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Clock className="h-4 w-4 text-rose-400" />
             {readingTime} min read
           </div>
         </div>
-
-        <h1
-          style={{
-            fontSize: '2.25rem',
-            fontWeight: 800,
-            margin: 0,
-            lineHeight: 1.2,
-          }}
-        >
-          <span
-            style={{
-              backgroundImage: 'linear-gradient(to right, #e11d48, #ea580c)',
-              WebkitBackgroundClip: 'text',
-              color: 'transparent',
-            }}
-          >
+        <h1 className="text-2xl lg:text-4xl font-bold lg:tracking-tight">
+          <span className="bg-linear-to-r from-rose-600 to-orange-600 bg-clip-text text-transparent">
             {title}
           </span>
         </h1>
       </div>
-
-      <div style={{ alignSelf: 'flex-start' }}>
-        <Button
-          variant="outline"
-          size="sm"
-          asChild
-          style={{ borderRadius: '9999px', backgroundColor: 'white' }}
-        >
-          <Link
-            href={'/dashboard'}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+      <div className="self-start">
+        <Link href={'/dashboard'}>
+          <Button
+            variant={'link'}
+            size={'sm'}
+            className="group flex items-center gap-1 sm:gap-2 hover:bg-white/80 backdrop-blur-xs rounded-full transition-all duration-200 shadow-xs hover:shadow-md border border-rose-100/30 bg-rose-100 px-2 sm:px-3"
           >
-            <ChevronLeft
-              style={{ height: '1rem', width: '1rem', color: '#e11d48' }}
-            />
-            <span style={{ color: '#4b5563', fontWeight: 500 }}>
-              Back to Dashboard
+            <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4 text-rose-500 transition-transform group-hover:-translate-x-0.5" />
+            <span className="text-xs sm:text-sm text-muted-foreground font-medium">
+              Back <span className="hidden sm:inline">to Dashboard</span>
             </span>
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       </div>
     </div>
   );

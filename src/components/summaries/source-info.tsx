@@ -14,44 +14,20 @@ export function SourceInfo({
   createdAt: string;
 }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '1rem',
-        padding: '1rem',
-        backgroundColor: 'white',
-        borderRadius: '0.75rem',
-        border: '1px solid #e5e7eb',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          color: '#4b5563',
-          fontSize: '0.875rem',
-        }}
-      >
-        <SquarePlay
-          style={{ height: '1.25rem', width: '1.25rem', color: '#f43f5e' }}
-        />
+    <div className="flex flex-col lg:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+      <div className="flex items-center justify-center gap-2">
+        <SquarePlay className="h-4 w-4 text-rose-400" />
         <span>Source: YouTube Video</span>
       </div>
-      <div style={{ display: 'flex', gap: '0.5rem' }}>
-        <Button variant="ghost" size="sm" asChild style={{ color: '#e11d48' }}>
-          <a
-            href={videoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ display: 'flex', alignItems: 'center' }}
-          >
-            <ExternalLink
-              style={{ height: '1rem', width: '1rem', marginRight: '0.25rem' }}
-            />
+      <div className="flex gap-2">
+        <Button
+          variant={'ghost'}
+          size={'sm'}
+          className="h-8 px-3 text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+          asChild
+        >
+          <a href={videoUrl} target="_blank" rel="noopener noreferrer">
+            <ExternalLink className="h-4 w-4 mr-1" />
             View Original
           </a>
         </Button>
