@@ -1,4 +1,5 @@
 'use server';
+import { eq } from 'drizzle-orm';
 
 import { generateSummaryFromGemini } from '@/lib/geminiai';
 import { fetchYoutubeMetadata } from '@/lib/youtube';
@@ -27,6 +28,29 @@ export async function generateYTSummary(youtubeUrl: string) {
     const { transcript, title, videoId } =
       await fetchYoutubeMetadata(youtubeUrl);
 
+    // Check if we already have a summary for this video in the database
+    try {
+      const existingSummary = await db
+        .select()
+        .from(videoSummaries)
+        .where(eq(videoSummaries.videoId, videoId))
+        .limit(1);
+
+      if (existingSummary && existingSummary.length > 0) {
+        return {
+          success: true,
+          message: 'Summary retrieved from cache successfully',
+          data: {
+            title: existingSummary[0].title || title,
+            summary: existingSummary[0].summaryText,
+            videoId: existingSummary[0].videoId,
+          },
+        };
+      }
+    } catch (cacheError) {
+      console.error('Error checking summary cache:', cacheError);
+    }
+
     let summary;
     try {
       summary = await generateSummaryFromOpenAI(transcript);
@@ -35,9 +59,10 @@ export async function generateYTSummary(youtubeUrl: string) {
         try {
           summary = await generateSummaryFromGemini(transcript);
         } catch (geminiError) {
-          throw new Error(
-            'Failed to generate summary with available AI providers',
-          );
+          if (geminiError instanceof Error && geminiError.message === 'RATE_LIMIT_EXCEEDED') {
+            throw new Error('Our daily AI limit has been reached. Please try again tomorrow!');
+          }
+          throw new Error('Failed to generate summary with available AI providers');
         }
       } else {
         throw error;

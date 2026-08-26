@@ -14,7 +14,7 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: 'YT Summariser',
+  title: 'AI YT Summariser',
   description:
     'Save time and effort with AI-Powered YouTube Video Summarization',
 };

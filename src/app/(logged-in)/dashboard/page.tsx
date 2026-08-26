@@ -1,157 +1,104 @@
-import SummaryCard from "@/components/summaries/summary-card";
-import { Button } from "@/components/ui/button";
-import { getSummaries } from "@/lib/summaries";
-import { getSession } from "@/lib/auth";
-import { Plus, SquarePlay } from "lucide-react";
-import { redirect } from "next/navigation";
-import Link from "next/link";
+import SummaryCard from '@/components/summaries/summary-card';
+import { Button } from '@/components/ui/button';
+import { getSummaries } from '@/lib/summaries';
+import { getSession } from '@/lib/auth';
+import { Plus, SquarePlay } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import BgGradient from '@/components/common/bg-gradient';
 import {
   MotionDiv,
   MotionH1,
   MotionP,
-} from "@/components/common/motion-wrapper";
-import { containerVariants, itemVariants } from "@/utils/constants";
+} from '@/components/common/motion-wrapper';
+import { itemVariants } from '@/utils/constants';
 
 export default async function DashboardPage() {
   const session = await getSession();
   const userId = session?.userId;
 
   if (!userId) {
-    return redirect("/sign-in");
+    return redirect('/sign-in');
   }
 
   const summaries = await getSummaries(userId);
 
   return (
-    <main style={{ minHeight: "100vh", backgroundColor: "#f9fafb" }}>
+    <main className="max-w-7xl mx-auto">
+      <BgGradient className="from-emerald-200 via-teal-200 to-cyan-200" />
       <MotionDiv
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          display: "flex",
-          flexDirection: "column",
-          gap: "1.5rem",
-          padding: "3rem 1.5rem",
-        }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="container mx-auto flex flex-col gap-4"
       >
-        {/* Header section */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "1rem",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}
-        >
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}
-          >
-            <MotionH1
+        <div className="px-2 py-12 sm:py-24">
+          <div className="flex gap-4 mb-8 justify-between">
+            <div className="flex flex-col gap-2">
+              <MotionH1
+                variants={itemVariants as any}
+                initial="hidden"
+                whileInView="visible"
+                className="text-4xl font-bold tracking-tight bg-linear-to-r from-gray-600 to-gray-900 bg-clip-text text-transparent"
+              >
+                Your Summaries
+              </MotionH1>
+              <MotionP
+                variants={itemVariants as any}
+                initial="hidden"
+                whileInView="visible"
+                className="text-gray-600"
+              >
+                Transform your YouTube videos into concise, actionable insights
+              </MotionP>
+            </div>
+            <MotionDiv
               variants={itemVariants as any}
-              style={{
-                fontSize: "2.25rem",
-                fontWeight: 800,
-                color: "#111827",
-                margin: 0,
-              }}
+              initial="hidden"
+              animate="visible"
+              whileHover={{ scale: 1.05 }}
+              className="self-start"
             >
-              Your Summaries
-            </MotionH1>
-            <MotionP
-              variants={itemVariants as any}
-              style={{ color: "#6b7280", margin: 0, fontSize: "1rem" }}
-            >
-              Transform your YouTube videos into concise, actionable insights
-            </MotionP>
+              <Button
+                variant={'link'}
+                className="bg-linear-to-r from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 hover:scale-105 transition-all duration-300 group hover:no-underline"
+                asChild
+              >
+                <Link href={'/yt'} className="flex items-center text-white">
+                  <Plus className="w-5 h-5 mr-2" />
+                  New Summary
+                </Link>
+              </Button>
+            </MotionDiv>
           </div>
-          <MotionDiv
-            variants={itemVariants as any}
-            whileHover={{ scale: 1.05 }}
-          >
-            <Button
-              asChild
-              style={{
-                backgroundColor: "#e11d48",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                textDecoration: "none",
-              }}
-            >
-              <Link href={"/yt"}>
-                <Plus style={{ width: "1.25rem", height: "1.25rem" }} />
-                New Summary
-              </Link>
-            </Button>
-          </MotionDiv>
-        </div>
 
-        {/* Empty State / Grid */}
-        {summaries.length === 0 ? (
-          <MotionDiv
-            variants={itemVariants as any}
-            style={{
-              textAlign: "center",
-              padding: "4rem 1rem",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "1rem",
-              backgroundColor: "white",
-              borderRadius: "1rem",
-              border: "1px solid #e5e7eb",
-              marginTop: "1rem",
-            }}
-          >
-            <SquarePlay
-              style={{ width: "4rem", height: "4rem", color: "#d1d5db" }}
-            />
-            <h3
-              style={{
-                fontSize: "1.25rem",
-                fontWeight: 600,
-                color: "#374151",
-                margin: 0,
-              }}
+          {summaries.length === 0 ? (
+            <MotionDiv
+              variants={itemVariants as any}
+              className="flex flex-col items-center justify-center py-16 px-4 bg-white/50 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-sm text-center mt-4"
             >
-              No Summaries yet
-            </h3>
-            <p style={{ color: "#6b7280", maxWidth: "24rem", margin: 0 }}>
-              Paste your first YouTube URL to get started with AI-powered
-              summaries.
-            </p>
-            <Button
-              asChild
-              style={{
-                marginTop: "1rem",
-                backgroundColor: "#e11d48",
-                color: "white",
-                textDecoration: "none",
-              }}
-            >
-              <Link href={"/yt"}>Create Your First Summary</Link>
-            </Button>
-          </MotionDiv>
-        ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: "1.5rem",
-              marginTop: "1rem",
-            }}
-          >
-            {summaries.map((summary, index) => (
-              <SummaryCard key={index} summary={summary} />
-            ))}
-          </div>
-        )}
+              <SquarePlay className="w-16 h-16 text-gray-300 mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                No Summaries yet
+              </h3>
+              <p className="text-gray-500 max-w-sm mb-6">
+                Paste your first YouTube URL to get started with AI-powered summaries.
+              </p>
+              <Button
+                asChild
+                className="bg-rose-500 hover:bg-rose-600 text-white rounded-full px-6"
+              >
+                <Link href={'/yt'}>Create Your First Summary</Link>
+              </Button>
+            </MotionDiv>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 sm:px-0">
+              {summaries.map((summary, index) => (
+                <SummaryCard key={index} summary={summary} />
+              ))}
+            </div>
+          )}
+        </div>
       </MotionDiv>
     </main>
   );

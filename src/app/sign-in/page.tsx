@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Eye, EyeOff, Loader2, Mail, Lock, SquarePlay } from 'lucide-react';
-import { signInAction } from '@/actions/auth-actions';
-import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Eye, EyeOff, Loader2, Mail, Lock, SquarePlay } from "lucide-react";
+import { signInAction } from "@/actions/auth-actions";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function SignInPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirect') || '/dashboard';
+  const redirectTo = searchParams.get("redirect") || "/dashboard";
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -91,7 +91,7 @@ export default function SignInPage() {
               <Input
                 id="signin-password"
                 name="password"
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 required
                 placeholder="••••••••"
@@ -118,6 +118,7 @@ export default function SignInPage() {
               id="signin-remember"
               name="rememberMe"
               type="checkbox"
+              value="true"
               className="w-4 h-4 rounded accent-rose-600 cursor-pointer"
             />
             <span className="text-sm text-gray-600">
@@ -138,13 +139,13 @@ export default function SignInPage() {
                 Signing in…
               </>
             ) : (
-              'Sign In'
+              "Sign In"
             )}
           </Button>
         </form>
 
         <p className="text-center text-sm text-gray-500 mt-6">
-          Don&apos;t have an account?{' '}
+          Don&apos;t have an account?{" "}
           <Link
             href="/sign-up"
             className="text-rose-600 font-semibold hover:text-rose-700 transition-colors"
