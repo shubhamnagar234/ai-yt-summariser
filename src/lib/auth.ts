@@ -1,21 +1,21 @@
-import { SignJWT, jwtVerify } from 'jose';
-import { cookies } from 'next/headers';
+import { SignJWT, jwtVerify } from "jose";
+import { cookies } from "next/headers";
 
 const secretKey = process.env.JWT_SECRET;
 const key = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: any) {
   return await new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
+    .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime('24h')
+    .setExpirationTime("7d")
     .sign(key);
 }
 
 export async function decrypt(input: string): Promise<any> {
   try {
     const { payload } = await jwtVerify(input, key, {
-      algorithms: ['HS256'],
+      algorithms: ["HS256"],
     });
     return payload;
   } catch {
@@ -23,23 +23,26 @@ export async function decrypt(input: string): Promise<any> {
   }
 }
 
-export async function createSession(userId: string) {
+export async function createSession(
+  userId: string,
+  rememberMe: boolean = false,
+) {
   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
   const session = await encrypt({ userId, expires });
 
   const cookieStore = await cookies();
-  cookieStore.set('session', session, {
-    expires,
+  cookieStore.set("session", session, {
+    ...(rememberMe ? { expires, maxAge: 7 * 24 * 60 * 60 } : {}),
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
   });
 }
 
 export async function getSession() {
   const cookieStore = await cookies();
-  const session = cookieStore.get('session')?.value;
+  const session = cookieStore.get("session")?.value;
   if (!session) return null;
   try {
     return await decrypt(session);
@@ -50,7 +53,7 @@ export async function getSession() {
 
 export async function updateSession() {
   const cookieStore = await cookies();
-  const session = cookieStore.get('session')?.value;
+  const session = cookieStore.get("session")?.value;
   if (!session) return;
 
   try {
@@ -58,12 +61,12 @@ export async function updateSession() {
     if (!payload) return;
 
     const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-    cookieStore.set('session', session, {
+    cookieStore.set("session", session, {
       expires,
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
     });
   } catch (err) {
     // ignore
@@ -72,5 +75,5 @@ export async function updateSession() {
 
 export async function deleteSession() {
   const cookieStore = await cookies();
-  cookieStore.delete('session');
+  cookieStore.delete("session");
 }

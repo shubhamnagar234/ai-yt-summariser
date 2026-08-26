@@ -1,19 +1,19 @@
-'use server';
+"use server";
 
-import { db } from '@/db';
-import { users } from '@/db/schema';
-import { eq } from 'drizzle-orm';
-import { createSession, deleteSession } from '@/lib/auth';
-import { redirect } from 'next/navigation';
-import bcrypt from 'bcrypt';
+import { db } from "@/db";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { createSession, deleteSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import bcrypt from "bcrypt";
 
 export async function signUpAction(formData: FormData) {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-  const fullName = formData.get('fullName') as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const fullName = formData.get("fullName") as string;
 
   if (!email || !password || !fullName) {
-    return { success: false, message: 'All fields are required' };
+    return { success: false, message: "All fields are required" };
   }
 
   try {
@@ -23,7 +23,7 @@ export async function signUpAction(formData: FormData) {
     });
 
     if (existingUser) {
-      return { success: false, message: 'User with this email already exists' };
+      return { success: false, message: "User with this email already exists" };
     }
 
     // Hash password
@@ -40,21 +40,21 @@ export async function signUpAction(formData: FormData) {
       .returning();
 
     // Directly create session
-    await createSession(newUser.id);
+    await createSession(newUser.id, false);
   } catch (err: any) {
-    console.error('Sign up error', err);
-    return { success: false, message: 'Something went wrong during sign up' };
+    console.error("Sign up error", err);
+    return { success: false, message: "Something went wrong during sign up" };
   }
 
-  return { success: true, message: 'Account created successfully' };
+  return { success: true, message: "Account created successfully" };
 }
 
 export async function signInAction(formData: FormData) {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
   if (!email || !password) {
-    return { success: false, message: 'Email and password are required' };
+    return { success: false, message: "Email and password are required" };
   }
 
   try {
@@ -63,24 +63,25 @@ export async function signInAction(formData: FormData) {
     });
 
     if (!user || !user.passwordHash) {
-      return { success: false, message: 'Invalid email or password' };
+      return { success: false, message: "Invalid email or password" };
     }
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
-      return { success: false, message: 'Invalid email or password' };
+      return { success: false, message: "Invalid email or password" };
     }
 
-    await createSession(user.id);
+    const rememberMe = formData.has("rememberMe");
+    await createSession(user.id, rememberMe);
   } catch (err) {
-    console.error('Sign in error', err);
-    return { success: false, message: 'Something went wrong during sign in' };
+    console.error("Sign in error", err);
+    return { success: false, message: "Something went wrong during sign in" };
   }
 
-  return { success: true, message: 'Signed in successfully' };
+  return { success: true, message: "Signed in successfully" };
 }
 
 export async function signOutAction() {
   await deleteSession();
-  redirect('/');
+  redirect("/sign-in");
 }
