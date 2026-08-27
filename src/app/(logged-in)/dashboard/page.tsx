@@ -1,31 +1,32 @@
-import SummaryCard from '@/components/summaries/summary-card';
-import { Button } from '@/components/ui/button';
-import { getSummaries } from '@/lib/summaries';
-import { getSession } from '@/lib/auth';
-import { Plus, SquarePlay } from 'lucide-react';
-import { redirect } from 'next/navigation';
-import Link from 'next/link';
-import BgGradient from '@/components/common/bg-gradient';
+import SummaryCard from "@/components/summaries/summary-card";
+import { Button } from "@/components/ui/button";
+import { getSummaries } from "@/lib/summaries";
+import { getSession } from "@/lib/auth";
+import { Plus } from "lucide-react";
+import { redirect } from "next/navigation";
+import EmptySummaryState from "@/components/summaries/empty-summary-state";
+import Link from "next/link";
+import BgGradient from "@/components/common/bg-gradient";
 import {
   MotionDiv,
   MotionH1,
   MotionP,
-} from '@/components/common/motion-wrapper';
-import { itemVariants } from '@/utils/constants';
+} from "@/components/common/motion-wrapper";
+import { itemVariants } from "@/utils/constants";
 
 export default async function DashboardPage() {
   const session = await getSession();
   const userId = session?.userId;
 
   if (!userId) {
-    return redirect('/sign-in');
+    return redirect("/sign-in");
   }
 
   const summaries = await getSummaries(userId);
 
   return (
     <main className="max-w-7xl mx-auto">
-      <BgGradient className="from-emerald-200 via-teal-200 to-cyan-200" />
+      <BgGradient />
       <MotionDiv
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -60,11 +61,11 @@ export default async function DashboardPage() {
               className="self-start"
             >
               <Button
-                variant={'link'}
+                variant={"link"}
                 className="bg-linear-to-r from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 hover:scale-105 transition-all duration-300 group hover:no-underline"
                 asChild
               >
-                <Link href={'/yt'} className="flex items-center text-white">
+                <Link href={"/yt"} className="flex items-center text-white">
                   <Plus className="w-5 h-5 mr-2" />
                   New Summary
                 </Link>
@@ -73,24 +74,7 @@ export default async function DashboardPage() {
           </div>
 
           {summaries.length === 0 ? (
-            <MotionDiv
-              variants={itemVariants as any}
-              className="flex flex-col items-center justify-center py-16 px-4 bg-white/50 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-sm text-center mt-4"
-            >
-              <SquarePlay className="w-16 h-16 text-gray-300 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                No Summaries yet
-              </h3>
-              <p className="text-gray-500 max-w-sm mb-6">
-                Paste your first YouTube URL to get started with AI-powered summaries.
-              </p>
-              <Button
-                asChild
-                className="bg-rose-500 hover:bg-rose-600 text-white rounded-full px-6"
-              >
-                <Link href={'/yt'}>Create Your First Summary</Link>
-              </Button>
-            </MotionDiv>
+            <EmptySummaryState />
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 sm:px-0">
               {summaries.map((summary, index) => (
