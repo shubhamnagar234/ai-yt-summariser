@@ -1,10 +1,9 @@
-import { SquarePlay } from 'lucide-react';
-import { Card } from '../ui/card';
-import DeleteButton from './delete-button';
-import Link from 'next/link';
-import { formatDistanceToNow } from 'date-fns';
-import { MotionDiv } from '../common/motion-wrapper';
-import { itemVariants } from '@/utils/constants';
+import { SquarePlay } from "lucide-react";
+import DeleteButton from "./delete-button";
+import Link from "next/link";
+import { formatDistanceToNow } from "date-fns";
+import { MotionDiv } from "../common/motion-wrapper";
+import { itemVariants } from "@/utils/constants";
 
 const SummaryHeader = ({
   title,
@@ -14,38 +13,13 @@ const SummaryHeader = ({
   createdAt: string;
 }) => {
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-      <SquarePlay
-        style={{
-          width: '2rem',
-          height: '2rem',
-          color: '#fb7185',
-          marginTop: '0.25rem',
-          flexShrink: 0,
-        }}
-      />
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <h3
-          style={{
-            fontSize: '1.125rem',
-            fontWeight: 600,
-            color: '#111827',
-            margin: 0,
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
-        >
-          {title || 'YouTube Video'}
+    <div className="flex items-start gap-4">
+      <SquarePlay className="w-8 h-8 text-rose-500 mt-1 shrink-0" />
+      <div className="flex-1 min-w-0">
+        <h3 className="text-lg font-semibold text-gray-900 truncate">
+          {title || "YouTube Video"}
         </h3>
-        <p
-          style={{
-            fontSize: '0.875rem',
-            color: '#6b7280',
-            margin: 0,
-            marginTop: '0.25rem',
-          }}
-        >
+        <p className="text-sm text-gray-500 mt-1">
           {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
         </p>
       </div>
@@ -61,74 +35,37 @@ export default function SummaryCard({ summary }: { summary: any }) {
       animate="visible"
       whileHover={{
         scale: 1.02,
-        transition: { duration: 0.2, ease: 'easeOut' },
+        transition: { duration: 0.2, ease: "easeOut" },
       }}
-      style={{ height: '100%' }}
+      className="h-full"
     >
-      <Card
-        style={{
-          position: 'relative',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            top: '0.5rem',
-            right: '0.5rem',
-            zIndex: 10,
-          }}
-        >
+      <div className="relative h-full flex flex-col bg-white/60 backdrop-blur-sm border border-rose-100 rounded-2xl shadow-xl shadow-rose-500/5 transition-all duration-300 hover:shadow-rose-500/10 overflow-hidden">
+        <div className="absolute top-4 right-4 z-10">
           <DeleteButton summaryId={summary.id} />
         </div>
         <Link
           href={`/summaries/${summary.id}`}
-          style={{
-            textDecoration: 'none',
-            color: 'inherit',
-            padding: '1.5rem',
-            display: 'flex',
-            flexDirection: 'column',
-            flex: 1,
-            gap: '1rem',
-          }}
+          className="flex flex-col flex-1 p-6 gap-4 outline-none"
         >
           <SummaryHeader title={summary.title} createdAt={summary.createdAt} />
 
-          <p
-            style={{
-              color: '#4b5563',
-              fontSize: '0.875rem',
-              margin: 0,
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
-            }}
-          >
+          <p className="text-gray-600 text-sm line-clamp-2">
             {summary.summaryText}
           </p>
 
-          <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
+          <div className="mt-auto pt-4">
             <span
-              style={{
-                padding: '0.25rem 0.75rem',
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                borderRadius: '9999px',
-                textTransform: 'capitalize',
-                backgroundColor:
-                  summary.status === 'completed' ? '#dcfce7' : '#fef9c3',
-                color: summary.status === 'completed' ? '#166534' : '#854d0e',
-              }}
+              className={`px-3 py-1 text-xs font-medium rounded-full capitalize ${
+                (summary.status || "pending") === "completed"
+                  ? "bg-emerald-100 text-emerald-800"
+                  : "bg-amber-100 text-amber-800"
+              }`}
             >
-              {summary.status}
+              {summary.status || "pending"}
             </span>
           </div>
         </Link>
-      </Card>
+      </div>
     </MotionDiv>
   );
 }
