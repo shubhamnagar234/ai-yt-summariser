@@ -1,11 +1,11 @@
-import BgGradient from '@/components/common/bg-gradient';
-import { SourceInfo } from '@/components/summaries/source-info';
-import { SummaryHeader } from '@/components/summaries/summary-header';
-import { SummaryViewer } from '@/components/summaries/summary-viewer';
-import { getSummaryById } from '@/lib/summaries';
-import { notFound } from 'next/navigation';
-import { MotionDiv } from '@/components/common/motion-wrapper';
-import { FileText } from 'lucide-react';
+import BgGradient from "@/components/common/bg-gradient";
+import { SourceInfo } from "@/components/summaries/source-info";
+import { SummaryHeader } from "@/components/summaries/summary-header";
+import { SummaryViewer } from "@/components/summaries/summary-viewer";
+import { getSummaryById } from "@/lib/summaries";
+import { notFound } from "next/navigation";
+import { MotionDiv } from "@/components/common/motion-wrapper";
+import { FileText } from "lucide-react";
 
 export default async function SummaryPage(props: {
   params: Promise<{ id: string }>;
@@ -29,17 +29,21 @@ export default async function SummaryPage(props: {
             className="flex flex-col"
           >
             <SummaryHeader
-              title={summary.title}
-              createdAt={summary.createdAt}
+              title={summary.title ?? "Untitled Summary"}
+              createdAt={
+                summary.createdAt?.toISOString() ?? new Date().toISOString()
+              }
               readingTime={readingTime}
             />
           </MotionDiv>
 
           <SourceInfo
-            title={summary.title}
+            title={summary.title ?? "Untitled Summary"}
             summaryText={summary.summaryText}
             videoUrl={summary.videoUrl}
-            createdAt={summary.createdAt}
+            createdAt={
+              summary.createdAt?.toISOString() ?? new Date().toISOString()
+            }
           />
 
           <MotionDiv
